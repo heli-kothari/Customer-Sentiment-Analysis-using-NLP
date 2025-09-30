@@ -1,11 +1,4 @@
 # predict.py
-"""
-Inference script for sentiment analysis.
-Usage: 
-    python predict.py --text "This product is amazing!"
-    python predict.py --file data/test_reviews.csv
-"""
-
 import argparse
 import torch
 import pandas as pd
@@ -15,16 +8,8 @@ from typing import List, Tuple
 from src.models.bert_classifier import SentimentClassifier
 
 class SentimentPredictor:
-    """Easy-to-use predictor class."""
     
     def __init__(self, model_path: str, device: str = None):
-        """
-        Initialize predictor.
-        
-        Args:
-            model_path: Path to saved model checkpoint
-            device: Device to run inference on
-        """
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
         self.class_names = ['Negative', 'Neutral', 'Positive']
         
@@ -41,12 +26,6 @@ class SentimentPredictor:
         print(f"Model loaded on {self.device}")
     
     def predict_single(self, text: str) -> Tuple[str, float, dict]:
-        """
-        Predict sentiment for a single text.
-        
-        Returns:
-            Tuple of (sentiment, confidence, probabilities)
-        """
         # Tokenize
         encoding = self.tokenizer.encode_plus(
             text,
@@ -77,12 +56,6 @@ class SentimentPredictor:
         return self.class_names[pred_idx], confidence, prob_dict
     
     def predict_batch(self, texts: List[str]) -> List[dict]:
-        """
-        Predict sentiment for multiple texts.
-        
-        Returns:
-            List of prediction dictionaries
-        """
         # Tokenize batch
         encoding = self.tokenizer.batch_encode_plus(
             texts,
@@ -122,7 +95,6 @@ class SentimentPredictor:
         return results
 
 def parse_args():
-    """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Predict sentiment')
     
     parser.add_argument('--model_path', type=str, default='models/best_model.pt',
@@ -141,7 +113,6 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    """Main prediction function."""
     args = parse_args()
     
     # Initialize predictor
